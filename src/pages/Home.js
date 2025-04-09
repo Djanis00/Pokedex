@@ -25,8 +25,7 @@ const Home = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("❌ Erreur API :", err);
-        setError("Impossible de charger les Pokémon");
+        setError("Erreur lors du chargement des données.");
         setLoading(false);
       });
   }, []);
@@ -42,7 +41,7 @@ const Home = () => {
 
     if (selectedType) {
       filtered = filtered.filter((pokemon) =>
-        pokemon.types.includes(selectedType)
+        Array.isArray(pokemon.types) && pokemon.types.includes(selectedType)
       );
     }
 
@@ -70,11 +69,21 @@ const Home = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = filteredList.slice(startIndex, startIndex + itemsPerPage);
 
-  const allTypes = [...new Set(pokemonList.flatMap((p) => p.types))];
+  const allTypes = [
+    ...new Set(
+      pokemonList
+        .flatMap((p) => Array.isArray(p.types) ? p.types : [])
+        .filter((t) => typeof t === "string")
+    ),
+  ];
 
   return (
     <div className="home">
       <h1>Pokédex</h1>
+
+      <button onClick={() => document.body.classList.toggle("dark-mode")}>
+        🌙 Mode Sombre
+      </button>
 
       <input
         type="text"
@@ -99,10 +108,10 @@ const Home = () => {
         </select>
 
         <select onChange={(e) => setSortBy(e.target.value)} defaultValue="id">
-          <option value="id">Trier par numéro</option>
-          <option value="name">Trier par nom</option>
-          <option value="weight">Trier par poids</option>
-          <option value="height">Trier par taille</option>
+          <option value="id">Numéro</option>
+          <option value="name">Nom</option>
+          <option value="weight">Poids</option>
+          <option value="height">Taille</option>
         </select>
       </div>
 
@@ -113,23 +122,9 @@ const Home = () => {
       </div>
 
       <div style={{ marginTop: "20px" }}>
-        <button
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage(currentPage - 1)}
-        >
-          ⬅️ Précédent
-        </button>
-
-        <span style={{ margin: "0 15px" }}>
-          Page {currentPage} sur {totalPages}
-        </span>
-
-        <button
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage(currentPage + 1)}
-        >
-          Suivant ➡️
-        </button>
+        <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>⬅️ Précédent</button>
+        <span style={{ margin: "0 15px" }}>Page {currentPage} / {totalPages}</span>
+        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>Suivant ➡️</button>
       </div>
     </div>
   );

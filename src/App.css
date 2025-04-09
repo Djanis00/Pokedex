@@ -6,28 +6,27 @@ body {
   padding: 0;
 }
 
-.home {
-  padding: 30px;
-  width: 100%;
-  text-align: center;
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
 }
 
-h1 {
-  color: #ee1515;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 0 #fff;
+body.dark-mode .pokemon-card {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
-/* ✅ Grille fixe de 5 colonnes à 160px */
+body.dark-mode .type {
+  background: rgba(255, 255, 255, 0.15);
+}
+
 .pokemon-list {
   display: grid;
-  grid-template-columns: repeat(5, 160px); /* 5 colonnes fixes */
+  grid-template-columns: repeat(5, 160px);
   gap: 20px;
   justify-content: center;
   padding: 10px;
 }
 
-/* Formulaires */
 input, select, button {
   padding: 8px 12px;
   margin: 5px;

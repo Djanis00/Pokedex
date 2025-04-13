@@ -1,49 +1,187 @@
+/* 🌍 Base */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #ffe6e6;
-  color: #333;
   margin: 0;
   padding: 0;
+  background: #e3f2fd;
+  font-family: Arial, sans-serif;
+  color: #000;
 }
 
-body.dark-mode {
+/* 🌙 Dark mode */
+body.dark {
   background-color: #121212;
-  color: #f0f0f0;
+  color: #eee;
 }
 
-body.dark-mode .pokemon-card {
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+body.dark .pokemon-card {
+  background-color: #1e1e1e;
+  color: #eee;
 }
 
-body.dark-mode .type {
-  background: rgba(255, 255, 255, 0.15);
+body.dark input,
+body.dark select,
+body.dark button {
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #555;
 }
 
-.pokemon-list {
-  display: grid;
-  grid-template-columns: repeat(5, 160px);
-  gap: 20px;
-  justify-content: center;
-  padding: 10px;
+/* 🏠 Home layout */
+.home {
+  text-align: center;
+  padding: 20px;
 }
 
 input, select, button {
-  padding: 8px 12px;
-  margin: 5px;
-  border: 1px solid #ffaaaa;
-  border-radius: 6px;
+  margin: 10px;
+  padding: 8px;
   font-size: 14px;
-  background-color: #fff0f0;
 }
 
-button {
-  background-color: #d32f2f;
+/* 🔎 Filtres */
+.filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* 🎴 Liste des cartes */
+.pokemon-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 20px;
+}
+
+/* 📇 Carte Pokémon */
+.pokemon-card {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.pokemon-card:hover {
+  transform: scale(1.05);
+}
+
+.pokemon-card img {
+  width: 80px;
+}
+
+/* 📃 Détail (si jamais tu l’utilises ailleurs) */
+.detail {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  padding: 20px;
+}
+
+.detail img {
+  width: 150px;
+}
+
+/* 📦 MODALE */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background: linear-gradient(135deg, #ffffff, #f9f9f9);
+  border-radius: 20px;
+  padding: 30px 25px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  color: #111;
+  animation: popIn 0.25s ease;
+  transition: all 0.3s;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal h2 {
+  margin-top: 0;
+  font-size: 24px;
+}
+
+.modal img {
+  max-width: 140px;
+  border-radius: 12px;
+  margin: 10px auto;
+}
+
+.modal p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.modal ul {
+  padding-left: 0;
+  list-style: none;
+  font-size: 14px;
+}
+
+.modal ul li {
+  margin: 4px 0;
+}
+
+.modal button {
+  background: #ef5350;
   color: white;
   border: none;
+  padding: 8px 16px;
+  border-radius: 30px;
   cursor: pointer;
   transition: background 0.2s;
+  font-weight: bold;
+  margin-top: 8px;
 }
 
-button:hover {
-  background-color: #9a0007;
+.modal button:hover {
+  background: #d32f2f;
 }
+
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+

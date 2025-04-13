@@ -1,84 +1,54 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+
+const typeMap = {
+  1: "Acier", 2: "Combat", 3: "Dragon", 4: "Eau", 5: "Electrik", 6: "Fée",
+  7: "Feu", 8: "Glace", 9: "Insecte", 10: "Normal", 11: "Plante", 12: "Poison",
+  13: "Psy", 14: "Roche", 15: "Sol", 16: "Spectre", 17: "Ténèbres", 18: "Vol"
+};
+
+const formatType = (t) => {
+  if (typeof t === "string") return t;
+  if (typeof t === "object" && t.name) return t.name;
+  if (typeof t === "number") return typeMap[t] || `Type ${t}`;
+  return "Inconnu";
+};
 
 const PokemonDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // id = slug maintenant
   const [pokemon, setPokemon] = useState(null);
   const [shiny, setShiny] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`https://pokedex-api.3rgo.tech/api/pokemon/${id}`)
-      .then((res) => {
-        setPokemon(res.data.data);
-      })
-      .catch((err) => {
-        console.error("Erreur lors du chargement du Pokémon :", err);
-      });
+      .then(res => setPokemon(res.data.data))
+      .catch(err => console.error("Erreur API :", err));
   }, [id]);
 
   if (!pokemon) return <p>Chargement...</p>;
 
   return (
-    <div style={{ textAlign: "center", padding: "20px" }}>
-      <Link to="/">⬅️ Retour à la liste</Link>
-      <h1>{pokemon.name.fr}</h1>
-      <img
-        src={shiny ? pokemon.image_shiny : pokemon.image}
-        alt={pokemon.name.fr}
-        
-        style={{
-            maxWidth: "600px",
-            margin: "0 auto",
-            padding: "20px",
-            background: "white",
-            borderRadius: "10px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
-          }}
-          
-      />
-      <br />
+    <div className="detail">
+      <button onClick={() => navigate("/")}>⬅ Retour</button>
+      <h1>{pokemon.name.fr} #{pokemon.id}</h1>
+      <img src={shiny ? pokemon.image_shiny : pokemon.image} alt={pokemon.name.fr} />
       <button onClick={() => setShiny(!shiny)}>
-        {shiny ? "Voir version normale" : "Voir version shiny"}
+        {shiny ? "Voir Normal" : "Voir Shiny"}
       </button>
-      <p><strong>Génération :</strong> {pokemon.generation}</p>
-      <p><strong>Taille :</strong> {pokemon.height} m</p>
-      <p><strong>Poids :</strong> {pokemon.weight} kg</p>
-      <p><strong>Types :</strong> {pokemon.types.join(", ")}</p>
-
+      <p>Génération : {pokemon.generation}</p>
+      <p>Type(s) : {pokemon.types.map(formatType).join(", ")}</p>
+      <p>Taille : {pokemon.height} dm</p>
+      <p>Poids : {pokemon.weight} hg</p>
       <h3>Statistiques</h3>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {pokemon.stats.map((stat, index) => (
-          <li key={index}>
-            {stat.name.fr} : {stat.value}
-          </li>
+      <ul>
+        {Object.entries(pokemon.stats).map(([stat, value]) => (
+          <li key={stat}>{stat} : {value}</li>
         ))}
       </ul>
-
-      {/* 🌱 Arbre des évolutions */}
-      <h3>Évolution</h3>
-      <div style={{ display: "flex", justifyContent: "center", gap: "40px", marginTop: "20px" }}>
-        {/* Évolutions précédentes */}
-        {pokemon.evolution?.pre?.map((evo) => (
-          <div key={evo.id}>
-            <p>⬅️ {evo.name.fr}</p>
-            <img src={evo.image} alt={evo.name.fr} width={80} />
-          </div>
-        ))}
-
-        {/* Évolutions suivantes */}
-        {pokemon.evolution?.next?.map((evo) => (
-          <div key={evo.id}>
-            <p>{evo.name.fr} ➡️</p>
-            <img src={evo.image} alt={evo.name.fr} width={80} />
-          </div>
-        ))}
-      </div>
-
     </div>
-    
   );
 };
-
 
 export default PokemonDetail;
